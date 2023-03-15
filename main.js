@@ -1,9 +1,9 @@
 const obj1 = { a: 0 };
 
-const obj2 = obj1.a + 100;
+const value = obj1.a + 100;
 
-console.log(obj2);
+console.log(value);
 
-// obj1はリアクティブではないので、obj1.aに100を代入してもobj2は100のまま
+// obj1はリアクティブではないので、obj1.aに100を代入してもvalueは100のまま
 obj1.a = 100;
-console.log(obj2);
+console.log(value);
