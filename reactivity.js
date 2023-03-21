@@ -18,9 +18,13 @@ const reactive = (target) => {
 
 let activeEffect = null;
 
-const effect = (fn) => {
+const effect = (fn, { computed = false } = {}) => {
   try {
     activeEffect = fn;
+    activeEffect.computed = computed;
+    if (computed) {
+      activeEffect.dirty = true;
+    }
     activeEffect();
     return activeEffect;
   } finally {
@@ -53,16 +57,27 @@ const trigger = (target, key) => {
   const deps = depsMap.get(key);
   if (deps === undefined) return;
   deps.forEach((effect) => {
-    effect();
+    if (effect.computed) {
+      effect.dirty = true;
+    } else {
+      effect();
+    }
   });
 };
 
 const computed = (getter) => {
-  let computed;
-  const runner = effect(getter);
+  let computed, value;
+  const runner = effect(getter, { computed: true });
   computed = {
     get value() {
-      return runner();
+      if (runner.dirty) {
+        value = runner();
+        // dirtyをfalseにして、キャッシュさせる
+        runner.dirty = false;
+        console.log("refresh");
+      }
+      // クロージャー
+      return value;
     },
   };
   return computed;

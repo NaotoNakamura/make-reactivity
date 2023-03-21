@@ -8,8 +8,8 @@ const computedValue = computed(() => {
   return obj1.a * 2;
 });
 
-obj1.a = 1;
+console.log(computedValue.value);
 console.log(computedValue.value);
 
-obj1.a = 2;
+obj1.a = 1;
 console.log(computedValue.value);
