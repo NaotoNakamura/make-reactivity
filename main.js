@@ -1,15 +1,22 @@
 import { reactive, effect, computed } from "./reactivity.js";
-const obj1 = reactive({
-  a: 0,
-  b: 2,
-});
+import { createVNode, patch } from "./renderer.js";
+import nodeOps from "./nodeOps.js";
 
-const computedValue = computed(() => {
-  return obj1.a * 2;
-});
-
-console.log(computedValue.value);
-console.log(computedValue.value);
-
-obj1.a = 1;
-console.log(computedValue.value);
+const container = nodeOps.qs("#app");
+const prevVNode = createVNode();
+const nextVNode1 = createVNode(
+  "div",
+  {
+    class: "demo",
+  },
+  "Hello"
+);
+const nextVNode2 = createVNode(
+  "div",
+  {
+    class: "demo",
+  },
+  "Bye"
+);
+patch(prevVNode, nextVNode1, container);
+patch(nextVNode1, nextVNode2, container);
