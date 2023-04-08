@@ -1,22 +1,24 @@
-import { reactive, effect, computed } from "./reactivity.js";
-import { createVNode, patch } from "./renderer.js";
-import nodeOps from "./nodeOps.js";
-
-const container = nodeOps.qs("#app");
-const prevVNode = createVNode();
-const nextVNode1 = createVNode(
-  "div",
-  {
-    class: "demo",
+import { createApp, h } from "./app.js";
+createApp({
+  data: () => ({
+    a: 8,
+    b: 7,
+  }),
+  render() {
+    return h("div", { class: "container" }, [
+      h("div", { class: "num" }, [
+        h("button", { class: "btn" }, "+"),
+        h("div", { class: "label" }, this.data.a),
+        h("button", { class: "btn" }, "-"),
+      ]),
+      h("div", { class: "num" }, "+"),
+      h("div", { class: "num" }, [
+        h("button", { class: "btn" }, "+"),
+        h("div", { class: "label" }, this.data.b),
+        h("button", { class: "btn" }, "-"),
+      ]),
+      h("div", { class: "num" }, "="),
+      h("div", { class: "result" }, 15),
+    ]);
   },
-  "Hello"
-);
-const nextVNode2 = createVNode(
-  "div",
-  {
-    class: "demo",
-  },
-  "Bye"
-);
-patch(prevVNode, nextVNode1, container);
-patch(nextVNode1, nextVNode2, container);
+}).mount("#app");
