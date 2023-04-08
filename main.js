@@ -1,24 +1,10 @@
-import { createApp, h } from "./app.js";
-createApp({
-  data: () => ({
-    a: 8,
-    b: 7,
-  }),
-  render() {
-    return h("div", { class: "container" }, [
-      h("div", { class: "num" }, [
-        h("button", { class: "btn" }, "+"),
-        h("div", { class: "label" }, this.data.a),
-        h("button", { class: "btn" }, "-"),
-      ]),
-      h("div", { class: "num" }, "+"),
-      h("div", { class: "num" }, [
-        h("button", { class: "btn" }, "+"),
-        h("div", { class: "label" }, this.data.b),
-        h("button", { class: "btn" }, "-"),
-      ]),
-      h("div", { class: "num" }, "="),
-      h("div", { class: "result" }, 15),
-    ]);
-  },
-}).mount("#app");
+import { reactive, effect } from "./reactivity.js";
+const obj = reactive({ a: 0 });
+let sum;
+// 以下の例だとリアクティブオブジェクトであるobj.aが変更されたら、effect内の関数が再実行される
+effect(() => {
+  sum = obj.a + 10;
+});
+console.log(sum); // 10が出力される
+obj.a = 10; // 値を変更
+console.log(sum); // 20が出力される
