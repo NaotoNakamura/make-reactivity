@@ -1,0 +1,25 @@
+{
+  "name": "make-reactivity",
+  "version": "1.0.0",
+  "description": "",
+  "main": "main.js",
+  "type": "module",
+  "scripts": {
+    "test": "vitest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/NaotoNakamura/make-reactivity.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/NaotoNakamura/make-reactivity/issues"
+  },
+  "homepage": "https://github.com/NaotoNakamura/make-reactivity#readme",
+  "devDependencies": {
+    "typescript": "^5.0.4",
+    "vitest": "^0.29.8"
+  }
+}

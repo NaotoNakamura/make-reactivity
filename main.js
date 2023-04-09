@@ -1,4 +1,4 @@
-import { reactive, effect } from "./reactivity.js";
+import { reactive, effect } from "./src/reactivity.js";
 const obj = reactive({ a: 0 });
 let sum;
 // 以下の例だとリアクティブオブジェクトであるobj.aが変更されたら、effect内の関数が再実行される
