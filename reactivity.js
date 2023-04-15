@@ -1,3 +1,6 @@
+let activeEffect = null;
+const targetMap = new WeakMap();
+
 const handler = {
   get: function (target, prop, receiver) {
     console.log("get trap called");
@@ -16,71 +19,57 @@ const reactive = (target) => {
   return new Proxy(target, handler);
 };
 
-let activeEffect = null;
+function effect(eff) {
+  activeEffect = eff;
+  activeEffect();
+  activeEffect = null;
+}
 
-const effect = (fn, { computed = false } = {}) => {
-  try {
-    activeEffect = fn;
-    activeEffect.computed = computed;
-    if (computed) {
-      activeEffect.dirty = true;
+function track(target, key) {
+  if (activeEffect) {
+    let depsMap = targetMap.get(target);
+    if (!depsMap) {
+      targetMap.set(target, (depsMap = new Map()));
     }
-    activeEffect();
-    return activeEffect;
-  } finally {
-    activeEffect = null;
+    let dep = depsMap.get(key);
+    if (!dep) {
+      depsMap.set(key, (dep = new Set()));
+    }
+    dep.add(activeEffect);
   }
-};
+}
 
-const targetMap = new WeakMap();
-
-const track = (target, key) => {
-  if (activeEffect === null) return;
-  let depsMap = targetMap.get(target);
-  if (depsMap === undefined) {
-    depsMap = new Map();
-    targetMap.set(target, depsMap);
-  }
-  let deps = depsMap.get(key);
-  if (deps === undefined) {
-    deps = new Set();
-    depsMap.set(key, deps);
-  }
-  if (!deps.has(activeEffect)) {
-    deps.add(activeEffect);
-  }
-};
-
-const trigger = (target, key) => {
+function trigger(target, key) {
   const depsMap = targetMap.get(target);
-  if (depsMap === undefined) return;
-  const deps = depsMap.get(key);
-  if (deps === undefined) return;
-  deps.forEach((effect) => {
-    if (effect.computed) {
-      effect.dirty = true;
-    } else {
+  if (!depsMap) {
+    return;
+  }
+  let dep = depsMap.get(key);
+  if (dep) {
+    dep.forEach((effect) => {
       effect();
-    }
-  });
-};
+    });
+  }
+}
 
-const computed = (getter) => {
-  let computed, value;
-  const runner = effect(getter, { computed: true });
-  computed = {
+function ref(raw) {
+  const r = {
     get value() {
-      if (runner.dirty) {
-        value = runner();
-        // dirtyをfalseにして、キャッシュさせる
-        runner.dirty = false;
-        console.log("refresh");
-      }
-      // クロージャー
-      return value;
+      track(this, "value");
+      return raw;
+    },
+    set value(newVal) {
+      raw = newVal;
+      trigger(this, "value");
     },
   };
-  return computed;
-};
+  return r;
+}
 
-export { reactive, effect, computed };
+function computed(getter) {
+  let result = ref();
+  effect(() => (result.value = getter()));
+  return result;
+}
+
+export { reactive, effect, ref, computed };

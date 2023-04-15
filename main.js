@@ -1,24 +1,12 @@
-import { createApp, h } from "./app.js";
-createApp({
-  data: () => ({
-    a: 8,
-    b: 7,
-  }),
-  render() {
-    return h("div", { class: "container" }, [
-      h("div", { class: "num" }, [
-        h("button", { class: "btn" }, "+"),
-        h("div", { class: "label" }, this.data.a),
-        h("button", { class: "btn" }, "-"),
-      ]),
-      h("div", { class: "num" }, "+"),
-      h("div", { class: "num" }, [
-        h("button", { class: "btn" }, "+"),
-        h("div", { class: "label" }, this.data.b),
-        h("button", { class: "btn" }, "-"),
-      ]),
-      h("div", { class: "num" }, "="),
-      h("div", { class: "result" }, 15),
-    ]);
-  },
-}).mount("#app");
+import { reactive, effect, ref, computed } from "./reactivity.js";
+
+let product = reactive({ price: 5, quantity: 2 });
+let total = 0;
+
+effect(() => {
+  total = product.price * product.quantity;
+});
+
+console.log(total);
+product.quantity = 3;
+console.log(total);
