@@ -1,11 +1,19 @@
-import { effect, trigger } from "./reactivity.js";
+import { effect, reactive } from "./reactivity.js";
 
-const obj = { a: 0 };
+const obj1 = reactive({
+  a: 0,
+  b: 100,
+});
+const obj2 = reactive({ b: 0 });
 
 effect(() => {
-  console.log(`${obj.a}が変更されました`);
+  /** TODO: オブジェクトのプロパティに変更があった時のみ実行するように修正する。
+   * 現状はeffect内で参照していないオブジェクトのプロパティ（obj2やobj1.b）に変更があった時でも
+   * effectを実行している（計3回この処理が呼び出される）。
+   */
+  console.log(`${obj1.a}が変更されました`);
 });
 
-obj.a = 1;
-// TODO: オブジェクトが変更された時に自動でtriggerを呼ぶように修正
-trigger();
+obj1.a = 1;
+obj1.b = 1;
+obj2.b = 1;
