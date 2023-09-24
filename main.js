@@ -1,9 +1,11 @@
-const obj1 = { a: 0 };
+import { effect, trigger } from "./reactivity.js";
 
-const obj2 = obj1.a + 100;
+const obj = { a: 0 };
 
-console.log(obj2);
+effect(() => {
+  console.log(`${obj.a}が変更されました`);
+});
 
-// obj1はリアクティブではないので、obj1.aに100を代入してもobj2は100のまま
-obj1.a = 100;
-console.log(obj2);
+obj.a = 1;
+// TODO: オブジェクトが変更された時に自動でtriggerを呼ぶように修正
+trigger();
