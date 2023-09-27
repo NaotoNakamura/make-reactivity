@@ -7,25 +7,31 @@ export function effect(fn) {
 
 const targetMap = new WeakMap();
 
-function track(target) {
-  targetMap.set(target, activeEffect);
+function track(target, key) {
+  let depsMap = targetMap.get(target);
+  if (!depsMap) {
+    targetMap.set(target, (depsMap = new Map()));
+  }
+  depsMap.set(key, activeEffect);
 }
 
-export function trigger(target) {
-  const effect = targetMap.get(target);
-  effect();
+export function trigger(target, key) {
+  const depsMap = targetMap.get(target);
+  if (!depsMap) return;
+  const effect = depsMap.get(key);
+  if (effect) effect();
 }
 
 const handler = {
   get: function (target, key, receiver) {
     console.log("get");
-    track(target);
+    track(target, key);
     return target[key];
   },
   set: function (target, key, value, receiver) {
     console.log("set");
     target[key] = value;
-    trigger(target);
+    trigger(target, key);
     return true;
   },
 };
