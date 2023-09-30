@@ -12,14 +12,21 @@ function track(target, key) {
   if (!depsMap) {
     targetMap.set(target, (depsMap = new Map()));
   }
-  depsMap.set(key, activeEffect);
+  let deps = depsMap.get(key);
+  if (!deps) {
+    depsMap.set(key, (deps = new Set()));
+  }
+  deps.add(activeEffect);
 }
 
 export function trigger(target, key) {
   const depsMap = targetMap.get(target);
   if (!depsMap) return;
-  const effect = depsMap.get(key);
-  if (effect) effect();
+  const deps = depsMap.get(key);
+  if (!deps) return;
+  deps.forEach((effect) => {
+    effect();
+  });
 }
 
 const handler = {
