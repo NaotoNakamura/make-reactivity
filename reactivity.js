@@ -3,11 +3,13 @@ let activeEffect = null;
 export function effect(fn) {
   activeEffect = fn;
   activeEffect();
+  activeEffect = null;
 }
 
 const targetMap = new WeakMap();
 
 function track(target, key) {
+  if (activeEffect === null) return;
   let depsMap = targetMap.get(target);
   if (!depsMap) {
     targetMap.set(target, (depsMap = new Map()));
