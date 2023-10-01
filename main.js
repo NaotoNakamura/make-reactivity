@@ -1,16 +1,14 @@
-import { effect, reactive } from "./reactivity.js";
+import { reactive, computed } from "./reactivity.js";
 
 const obj1 = reactive({
-  a: "初期化",
-  b: "初期化",
+  a: 0,
+  b: 1,
 });
 
-effect(() => {
-  console.log(`obj1.aが${obj1.a}されました1`);
+const computedValue = computed(() => {
+  return obj1.a + 10;
 });
 
-effect(() => {
-  console.log(`obj1.bが${obj1.b}されました`);
-});
-
-obj1.a = "変更";
+console.log(computedValue.value);
+obj1.a = 1;
+console.log(computedValue.value);

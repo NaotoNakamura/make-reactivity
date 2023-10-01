@@ -1,9 +1,13 @@
 let activeEffect = null;
 
 export function effect(fn) {
-  activeEffect = fn;
-  activeEffect();
-  activeEffect = null;
+  try {
+    activeEffect = fn;
+    activeEffect();
+    return activeEffect;
+  } finally {
+    activeEffect = null;
+  }
 }
 
 const targetMap = new WeakMap();
@@ -47,4 +51,20 @@ const handler = {
 
 export function reactive(target) {
   return new Proxy(target, handler);
+}
+
+export function computed(getter) {
+  let computed;
+  const runner = effect(getter);
+  computed = {
+    get value() {
+      /**
+       * TODO: computedが依存する値に変更がある場合のみ
+       * runnerの再実行を行うようにする
+       */
+      const value = runner();
+      return value;
+    },
+  };
+  return computed;
 }
