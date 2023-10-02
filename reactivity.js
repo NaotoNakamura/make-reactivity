@@ -1,8 +1,12 @@
 let activeEffect = null;
 
-export function effect(fn) {
+export function effect(fn, { computed = false } = {}) {
   try {
     activeEffect = fn;
+    activeEffect.computed = computed;
+    if (computed) {
+      activeEffect.dirty = true;
+    }
     activeEffect();
     return activeEffect;
   } finally {
@@ -31,7 +35,11 @@ export function trigger(target, key) {
   const deps = depsMap.get(key);
   if (!deps) return;
   deps.forEach((effect) => {
-    effect();
+    if (effect.computed) {
+      effect.dirty = true;
+    } else {
+      effect();
+    }
   });
 }
 
@@ -54,15 +62,15 @@ export function reactive(target) {
 }
 
 export function computed(getter) {
-  let computed;
-  const runner = effect(getter);
+  let computed, value;
+  const runner = effect(getter, { computed: true });
   computed = {
     get value() {
-      /**
-       * TODO: computedが依存する値に変更がある場合のみ
-       * runnerの再実行を行うようにする
-       */
-      const value = runner();
+      if (runner.dirty) {
+        console.log("runnerが実行");
+        value = runner();
+        runner.dirty = false;
+      }
       return value;
     },
   };
