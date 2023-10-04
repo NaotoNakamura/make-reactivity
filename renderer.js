@@ -27,9 +27,9 @@ function patch(n1, n2, container) {
    */
   for (const key in n2.props) {
     const prevProp = n1.props[key];
-    const nextProps = n2.props[key];
-    if (prevProp !== nextProps) {
-      nodeOps.setAttr(el, key, nextProps);
+    const nextProp = n2.props[key];
+    if (prevProp !== nextProp) {
+      nodeOps.setAttr(el, key, nextProp);
     }
   }
 
