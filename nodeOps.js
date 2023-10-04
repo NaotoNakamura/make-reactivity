@@ -15,6 +15,6 @@ export const nodeOps = {
     target.innerHTML = value;
   },
   on(target, eventType, callback) {
-    target.addEventListener(eventType, callback());
+    target.addEventListener(eventType, () => callback());
   },
 };

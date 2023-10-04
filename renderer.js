@@ -29,6 +29,9 @@ function patch(n1, n2, container) {
     const prevProp = n1.props[key];
     const nextProp = n2.props[key];
     if (prevProp !== nextProp) {
+      if (key.startsWith("on")) {
+        nodeOps.on(el, key.substring(2).toLocaleLowerCase(), nextProp);
+      }
       nodeOps.setAttr(el, key, nextProp);
     }
   }
