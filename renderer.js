@@ -22,6 +22,18 @@ function patch(n1, n2, container) {
   }
 
   /*
+   * TDOO: 属性が削除された場合も更新を行えるようにする
+   * 現状は属性が追加 or 変更された場合のみ属性の更新が行える
+   */
+  for (const key in n2.props) {
+    const prevProp = n1.props[key];
+    const nextProps = n2.props[key];
+    if (prevProp !== nextProps) {
+      nodeOps.setAttr(el, key, nextProps);
+    }
+  }
+
+  /*
    * TODO: 文字列以外も子要素に指定できるようにする
    * 現状のchildrenはDOM要素が来ない想定（文字列のみ）
    */
