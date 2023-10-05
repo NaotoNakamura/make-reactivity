@@ -14,20 +14,16 @@ const nextVnode = createVNode(
   [createVNode("div", {}, "Hello")]
 );
 
-/*
- * TODO: ノードのtypeが同じ場合もDOM更新できるようにする
- * 現状はtypeが同じだとel変数に値が入らずにエラーになってしまう
- */
+const nextVnode2 = createVNode(
+  "div",
+  {
+    class: "green",
+    onClick: () => {
+      console.log("Hello");
+    },
+  },
+  [createVNode("div", {}, "Bye")]
+);
 
-// const nextVnode2 = createVNode(
-//   "div",
-//   {
-//     class: "green",
-//     onClick: () => {
-//       console.log("Hello");
-//     },
-//   },
-//   [createVNode("div", {}, "Bye")]
-// );
 patch(prevVNode, nextVnode, container);
-// patch(nextVnode, nextVnode2, container);
+patch(nextVnode, nextVnode2, container);

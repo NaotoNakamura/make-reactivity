@@ -17,8 +17,10 @@ function patch(n1, n2, container) {
    */
   let el;
   if (n1.type !== n2.type) {
-    el = nodeOps.create(n2.type);
+    el = n2.el = nodeOps.create(n2.type);
     nodeOps.append(container, el);
+  } else {
+    el = n2.el = n1.el;
   }
 
   /*
