@@ -36,12 +36,18 @@ function patch(n1, n2, container) {
     }
   }
 
-  /*
-   * TODO: 文字列以外も子要素に指定できるようにする
-   * 現状のchildrenはDOM要素が来ない想定（文字列のみ）
-   */
-  if (n1.children !== n2.children) {
-    nodeOps.html(el, n2.children);
+  if (n2.children instanceof Array) {
+    for (let i = 0; i < n2.children.length; i++) {
+      if (n1.children.hasOwnProperty(i)) {
+        patch(n1.children[i], n2.children[i], el);
+      } else {
+        patch(createVNode(), n2.children[i], el);
+      }
+    }
+  } else {
+    if (n1.children !== n2.children) {
+      nodeOps.html(el, n2.children);
+    }
   }
 }
 
