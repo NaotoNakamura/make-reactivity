@@ -1,6 +1,10 @@
 import { createApp, h } from "./app.js";
 
 createApp({
+  data: () => ({
+    a: 8,
+    b: 7,
+  }),
   render() {
     return h("div", { class: "container" }, [
       h("div", { class: "num" }, [
