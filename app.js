@@ -8,10 +8,11 @@ function createApp(args) {
   app.data = reactive(data());
   app.mount = function (selector) {
     const container = nodeOps.qs(selector);
-    const prevVNode = createVNode();
+    app.vnode = createVNode();
     effect(() => {
       const nextVNode = render.call(app);
-      patch(prevVNode, nextVNode, container);
+      patch(app.vnode, nextVNode, container);
+      app.vnode = nextVNode;
     });
   };
   return app;
