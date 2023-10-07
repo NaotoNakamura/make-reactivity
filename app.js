@@ -3,8 +3,9 @@ import { createVNode, patch } from "./renderer.js";
 import { reactive, effect, computed } from "./reactivity.js";
 
 function createApp(args) {
-  const { data, render, computed: computedData } = args;
+  const { data, render, computed: computedData, methods } = args;
   const app = {};
+  app.methods = methods;
   app.data = reactive(data());
   app.computed = {};
   for (const prop in computedData) {
