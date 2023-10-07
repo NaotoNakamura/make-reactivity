@@ -5,6 +5,11 @@ createApp({
     a: 8,
     b: 7,
   }),
+  computed: {
+    sum() {
+      return this.data.a + this.data.b;
+    },
+  },
   render() {
     return h("div", { class: "container" }, [
       h("div", { class: "num" }, [
@@ -19,7 +24,7 @@ createApp({
         h("button", { class: "btn" }, "-"),
       ]),
       h("div", { class: "num" }, "="),
-      h("div", { class: "result" }, 15),
+      h("div", { class: "result" }, this.computed.sum.value),
     ]);
   },
 }).mount("#app");

@@ -61,9 +61,9 @@ export function reactive(target) {
   return new Proxy(target, handler);
 }
 
-export function computed(getter) {
+export function computed(getter, ctx) {
   let computed, value;
-  const runner = effect(getter, { computed: true });
+  const runner = effect(getter.bind(ctx), { computed: true });
   computed = {
     get value() {
       if (runner.dirty) {

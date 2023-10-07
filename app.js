@@ -1,11 +1,16 @@
 import { nodeOps } from "./nodeOps.js";
 import { createVNode, patch } from "./renderer.js";
-import { reactive, effect } from "./reactivity.js";
+import { reactive, effect, computed } from "./reactivity.js";
 
 function createApp(args) {
-  const { data, render } = args;
+  const { data, render, computed: computedData } = args;
   const app = {};
   app.data = reactive(data());
+  app.computed = {};
+  for (const prop in computedData) {
+    const c = computed(computedData[prop], app);
+    app.computed[prop] = c;
+  }
   app.mount = function (selector) {
     const container = nodeOps.qs(selector);
     app.vnode = createVNode();
