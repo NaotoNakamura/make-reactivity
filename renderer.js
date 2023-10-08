@@ -32,7 +32,9 @@ function patch(n1, n2, container) {
     const nextProp = n2.props[key];
     if (prevProp !== nextProp) {
       if (key.startsWith("on")) {
-        nodeOps.on(el, key.substring(2).toLocaleLowerCase(), nextProp);
+        if (!prevProp || prevProp.toString() !== nextProp.toString()) {
+          nodeOps.on(el, key.substring(2).toLocaleLowerCase(), nextProp);
+        }
       }
       nodeOps.setAttr(el, key, nextProp);
     }
